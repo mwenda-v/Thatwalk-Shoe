@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - MyApp</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="auth-container">
+    <div class="auth-left">
+      <h1 class="logo">MyApp</h1>
+      <h2>Welcome back</h2>
+
+      <button id="google-login" class="btn google-btn">Continue with Google</button>
+
+      <form id="login-form">
+        <input type="email" id="email" placeholder="Enter email" required>
+        <input type="password" id="password" placeholder="Enter password" required>
+        <button type="submit" class="btn primary-btn">Continue</button>
+      </form>
+      <p class="forgot-link">
+        <a href="forgot-password.html">Forgot Password?</a>
+      </p>
+
+      <p class="signup-link">Don’t have an account? 
+        <a href="register.html">Sign up</a>
+      </p>
+
+      <p class="terms">By continuing, you agree to our 
+        <a href="#">Terms</a> and <a href="#">Privacy Policy</a>.
+      </p>
+
+      
+      
+    </div>
+
+    <div class="auth-right">
+      <div class="artwork">
+        <!-- Replace with your own artwork or background -->
+        <h3></h3>Creative Space </h3>
+        <p>Login to explore more.</p>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="auth.js"></script>
+
+  <script>
+const SUPABASE_URL = "https://dnjjsrnkctqgovivfthm.supabase.co/rest/v1/";
+const SUPABASE_ANON_KEY = "sb_publishable_Wk-1zHQM2IqZkc9qIXn2mg_jDZVNLt3";
+
+const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// Handle login
+document.getElementById("login-form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email,
+    password,
+  });
+
+  if (error) {
+    alert("Login failed: " + error.message);
+  } else {
+    alert("Login successful!");
+    // Redirect to dashboard
+    window.location.href = "dashboard.html";
+  }
+});
+
+// Google OAuth login
+document.getElementById("google-login").addEventListener("click", async () => {
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider: "google",
+  });
+
+  if (error) {
+    alert("Google login failed: " + error.message);
+  }
+});
+</script>
+</body>
+</html>

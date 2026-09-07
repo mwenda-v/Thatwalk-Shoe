@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register - MyApp</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="auth-container">
+    <div class="auth-left">
+      <h1 class="logo">MyApp</h1>
+      <h2>Create your account</h2>
+
+      <button id="google-register" class="btn google-btn">Sign up with Google</button>
+
+      <form id="register-form">
+        <input type="text" id="username" placeholder="Enter username" required>
+        <input type="email" id="email" placeholder="Enter email" required>
+        <input type="password" id="password" placeholder="Enter password" required>
+        <button type="submit" class="btn primary-btn">Sign Up</button>
+      </form>
+
+      <p class="terms">By signing up, you agree to our 
+        <a href="#">Terms</a> and <a href="#">Privacy Policy</a>.
+      </p>
+
+      <p class="signup-link">Already have an account? 
+        <a href="login.html">Login</a>
+      </p>
+
+       <p class="forgot-link">
+        <a href="forgot-password.html">Forgot Password?</a>
+      </p>
+    </div>
+
+    <div class="auth-right">
+      <div class="artwork">
+        <h3> Join the journey</h3>
+        <p>Create your account and get started.</p>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="auth.js"></script>
+</body>
+</html>
+
+  <script>
+    // Show reset form after 2 seconds
+    setTimeout(() => {
+      document.getElementById("loading").classList.add("hidden");
+      document.getElementById("reset-form").classList.remove("hidden");
+    }, 2000);
+  </script>
+  <script>
+    const SUPABASE_URL = "https://dnjjsrnkctqgovivfthm.supabase.co/rest/v1/";
+    const SUPABASE_ANON_KEY = "sb_publishable_Wk-1zHQM2IqZkc9qIXn2mg_jDZVNLt3";
+
+    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+
+  // Handle registration
+document.getElementById("register-form")?.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+  const username = document.getElementById("username").value;
+
+  const { data, error } = await supabase.auth.signUp({
+    email,
+    password,
+    options: {
+      data: { username } // store extra user metadata
+    }
+  });
+
+  if (error) {
+    alert("Registration failed: " + error.message);
+  } else {
+    alert("Registration successful!");
+    // Redirect straight to services page
+    window.location.href = "services.html";
+  }
+});
+
+// Google OAuth signup
+document.getElementById("google-register")?.addEventListener("click", async () => {
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider: "google",
+    options: {
+      redirectTo: "services.html"
+    }
+  });
+
+  if (error) {
+    alert("Google signup failed: " + error.message);
+  }
+});
+
+  </script>
+</body>
+</html>
