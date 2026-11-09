@@ -3,102 +3,64 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Register - MyApp</title>
+  <title>Choose a new password | That Walk & Shoe</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;600;700&family=Barlow+Condensed:wght@700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body data-page="reset">
   <div class="auth-container">
-    <div class="auth-left">
-      <h1 class="logo">MyApp</h1>
-      <h2>Create your account</h2>
 
-      <button id="google-register" class="btn google-btn">Sign up with Google</button>
+    <main class="auth-left">
+      <div class="auth-card">
+        <a class="brand" href="index.html">
+          <img src="Logo.jpeg" alt="">
+          <span>That Walk &amp; Shoe</span>
+        </a>
 
-      <form id="register-form">
-        <input type="text" id="username" placeholder="Enter username" required>
-        <input type="email" id="email" placeholder="Enter email" required>
-        <input type="password" id="password" placeholder="Enter password" required>
-        <button type="submit" class="btn primary-btn">Sign Up</button>
-      </form>
+        <h1>Choose a new password</h1>
+        <p class="subtitle">Pick something you haven't used on this site before.</p>
 
-      <p class="terms">By signing up, you agree to our 
-        <a href="#">Terms</a> and <a href="#">Privacy Policy</a>.
-      </p>
+        <div id="form-message" class="form-message" role="alert" aria-live="polite" hidden></div>
 
-      <p class="signup-link">Already have an account? 
-        <a href="login.html">Login</a>
-      </p>
+        <p id="reset-status" class="subtitle">Checking your reset link...</p>
 
-       <p class="forgot-link">
-        <a href="forgot-password.html">Forgot Password?</a>
-      </p>
-    </div>
+        <form id="reset-form" hidden>
+          <div class="field">
+            <label for="password">New password</label>
+            <div class="password-wrap">
+              <input type="password" id="password" autocomplete="new-password" minlength="8" required>
+              <button type="button" class="toggle-pw" data-target="password" aria-pressed="false">Show</button>
+            </div>
+            <span class="hint">At least 8 characters, with a letter and a number.</span>
+          </div>
 
-    <div class="auth-right">
-      <div class="artwork">
-        <h3> Join the journey</h3>
-        <p>Create your account and get started.</p>
+          <div class="field">
+            <label for="confirm-password">Confirm new password</label>
+            <input type="password" id="confirm-password" autocomplete="new-password" required>
+          </div>
+
+          <button type="submit" class="btn btn-primary">Update password</button>
+        </form>
+
+        <div id="request-new" class="form-links" hidden>
+          <p><a href="forgot-password.html">Request a new reset link</a></p>
+        </div>
       </div>
-    </div>
+    </main>
+
+    <aside class="auth-right" aria-hidden="true">
+      <div class="slide active"><img src="fashionheels.jpg" alt=""></div>
+      <div class="overlay-content">
+        <h2>Almost there</h2>
+        <p>Set your new password and get back to shopping.</p>
+      </div>
+    </aside>
+
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="auth.js"></script>
-</body>
-</html>
-
-  <script>
-    // Show reset form after 2 seconds
-    setTimeout(() => {
-      document.getElementById("loading").classList.add("hidden");
-      document.getElementById("reset-form").classList.remove("hidden");
-    }, 2000);
-  </script>
-  <script>
-    const SUPABASE_URL = "https://dnjjsrnkctqgovivfthm.supabase.co/rest/v1/";
-    const SUPABASE_ANON_KEY = "sb_publishable_Wk-1zHQM2IqZkc9qIXn2mg_jDZVNLt3";
-
-    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-
-  // Handle registration
-document.getElementById("register-form")?.addEventListener("submit", async (e) => {
-  e.preventDefault();
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("password").value;
-  const username = document.getElementById("username").value;
-
-  const { data, error } = await supabase.auth.signUp({
-    email,
-    password,
-    options: {
-      data: { username } // store extra user metadata
-    }
-  });
-
-  if (error) {
-    alert("Registration failed: " + error.message);
-  } else {
-    alert("Registration successful!");
-    // Redirect straight to services page
-    window.location.href = "services.html";
-  }
-});
-
-// Google OAuth signup
-document.getElementById("google-register")?.addEventListener("click", async () => {
-  const { data, error } = await supabase.auth.signInWithOAuth({
-    provider: "google",
-    options: {
-      redirectTo: "services.html"
-    }
-  });
-
-  if (error) {
-    alert("Google signup failed: " + error.message);
-  }
-});
-
-  </script>
 </body>
 </html>
