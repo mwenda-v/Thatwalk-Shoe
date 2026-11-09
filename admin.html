@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin | That Walk & Shoe</title>
+<meta name="robots" content="noindex">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, Helvetica, sans-serif; }
+body { background: #f5f5f5; color: #111; }
+:focus-visible { outline: 2px solid #ff6600; outline-offset: 2px; }
+
+.topbar { background: #000; color: #fff; display: flex; align-items: center; justify-content: space-between; padding: 12px 5%; gap: 12px; flex-wrap: wrap; }
+.topbar .brand { display: flex; align-items: center; gap: 12px; font-weight: bold; }
+.topbar img { height: 40px; width: 40px; object-fit: cover; border-radius: 6px; }
+.topbar nav { display: flex; gap: 10px; }
+
+.btn { padding: 10px 16px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 14px; background: #ff6600; color: #111; }
+.btn:hover { background: #e65c00; }
+.btn.secondary { background: #fff; color: #111; border: 1px solid #ccc; }
+.btn.secondary:hover { background: #f0f0f0; }
+.btn.danger { background: #fff; color: #b3261e; border: 1px solid #e0b4b0; }
+.btn.small { padding: 6px 10px; font-size: 13px; }
+.btn[disabled] { opacity: .6; cursor: not-allowed; }
+
+main { padding: 24px 5% 60px; }
+.gate { padding: 40px; text-align: center; color: #555; }
+
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-bottom: 20px; }
+.stat { background: #fff; border-radius: 8px; padding: 14px 16px; box-shadow: 0 1px 4px rgba(0,0,0,.12); }
+.stat b { display: block; font-size: 1.6rem; }
+.stat span { font-size: 13px; color: #555; }
+
+.toolbar { display: flex; gap: 12px; margin-bottom: 14px; flex-wrap: wrap; }
+.toolbar input { flex: 1 1 240px; padding: 10px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 15px; }
+
+.form-message { padding: 10px 12px; margin-bottom: 14px; border-radius: 6px; font-size: .92rem; }
+.form-message[hidden] { display: none; }
+.form-message.error { background: #fdecea; color: #b3261e; }
+.form-message.success { background: #e8f5ec; color: #1b6b34; }
+
+.table-wrap { overflow-x: auto; background: #fff; border-radius: 8px; box-shadow: 0 1px 4px rgba(0,0,0,.12); }
+table { width: 100%; border-collapse: collapse; min-width: 720px; }
+th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #eee; font-size: 14px; vertical-align: middle; }
+th { background: #fafafa; font-size: 13px; color: #555; }
+td img { width: 48px; height: 48px; object-fit: cover; border-radius: 6px; display: block; }
+.badge { display: inline-block; padding: 3px 8px; border-radius: 999px; font-size: 12px; font-weight: bold; }
+.badge.on { background: #e8f5ec; color: #1b6b34; }
+.badge.off { background: #eee; color: #555; }
+.badge.low { background: #fff3e8; color: #9a4500; }
+.actions { display: flex; gap: 6px; flex-wrap: wrap; }
+
+/* dialog form */
+dialog { border: none; border-radius: 12px; width: min(820px, 96vw); max-height: 94vh; overflow: auto; padding: 0; }
+dialog::backdrop { background: rgba(0,0,0,.6); }
+.dlg { padding: 22px; }
+.dlg h2 { margin-bottom: 14px; }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.field { display: flex; flex-direction: column; margin-bottom: 12px; }
+.field label { font-size: 13px; font-weight: bold; margin-bottom: 5px; }
+.field input, .field select, .field textarea { padding: 9px 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; width: 100%; }
+.field textarea { min-height: 70px; resize: vertical; }
+.check { flex-direction: row; align-items: center; gap: 8px; }
+.check input { width: auto; }
+.preview { width: 90px; height: 90px; object-fit: cover; border-radius: 8px; margin-top: 8px; border: 1px solid #ddd; }
+.hint { font-size: 12px; color: #666; margin-top: 4px; }
+
+.variants { margin: 8px 0 4px; }
+.variants table { min-width: 0; }
+.variants input { padding: 7px 8px; border: 1px solid #ccc; border-radius: 6px; width: 100%; font-size: 14px; }
+.variants td, .variants th { padding: 6px 6px; }
+.dlg-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 16px; }
+
+@media (max-width: 640px) { .grid2 { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body data-page="admin">
+
+<header class="topbar">
+    <div class="brand"><img src="Logo.jpeg" alt=""> Admin: That Walk &amp; Shoe</div>
+    <nav>
+        <a class="btn secondary small" href="index.html" style="text-decoration:none">View shop</a>
+        <button class="btn secondary small" id="logout" type="button">Log out</button>
+    </nav>
+</header>
+
+<main>
+    <div id="gate" class="gate">Checking access...</div>
+
+    <div id="app" hidden>
+        <div class="stats" id="stats"></div>
+
+        <div id="form-message" class="form-message" role="alert" aria-live="polite" hidden></div>
+
+        <div class="toolbar">
+            <input type="search" id="admin-search" placeholder="Search products" aria-label="Search products">
+            <button class="btn" id="add-product" type="button">Add product</button>
+        </div>
+
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr><th></th><th>Product</th><th>Category</th><th>Price</th><th>Stock</th><th>Status</th><th>Actions</th></tr>
+                </thead>
+                <tbody id="product-rows"></tbody>
+            </table>
+        </div>
+    </div>
+</main>
+
+<!-- ADD / EDIT DIALOG -->
+<dialog id="product-dialog">
+    <form id="product-form" class="dlg">
+        <h2 id="dlg-title">Add product</h2>
+        <div id="dlg-message" class="form-message" role="alert" aria-live="polite" hidden></div>
+
+        <div class="grid2">
+            <div class="field">
+                <label for="p-name">Product name</label>
+                <input id="p-name" required maxlength="80">
+            </div>
+            <div class="field">
+                <label for="p-category">Category</label>
+                <select id="p-category" required></select>
+            </div>
+            <div class="field">
+                <label for="p-brand">Brand (optional)</label>
+                <input id="p-brand" maxlength="40">
+            </div>
+            <div class="field">
+                <label for="p-price">Base price (KES)</label>
+                <input id="p-price" type="number" min="0" step="50" required>
+            </div>
+        </div>
+
+        <div class="field">
+            <label for="p-desc">Description</label>
+            <textarea id="p-desc" maxlength="600"></textarea>
+        </div>
+
+        <div class="field">
+            <label for="p-image">Photo</label>
+            <input id="p-image" type="file" accept="image/*">
+            <span class="hint">JPG, PNG or WebP, up to 3 MB. Leave empty to keep the current photo.</span>
+            <img id="p-preview" class="preview" alt="" hidden>
+        </div>
+
+        <div class="field check">
+            <input id="p-active" type="checkbox" checked>
+            <label for="p-active" style="margin:0">Show in the shop</label>
+        </div>
+
+        <h3>Sizes and stock</h3>
+        <p class="hint">Each row is one size (and color) with its own stock. Leave "Price" empty to use the base price.</p>
+        <div class="variants">
+            <table>
+                <thead><tr><th>Size</th><th>Color</th><th>Stock</th><th>Price (optional)</th><th></th></tr></thead>
+                <tbody id="variant-rows"></tbody>
+            </table>
+        </div>
+        <button type="button" class="btn secondary small" id="add-variant">Add size</button>
+
+        <div class="dlg-actions">
+            <button type="button" class="btn secondary" id="cancel">Cancel</button>
+            <button type="submit" class="btn" id="save">Save product</button>
+        </div>
+    </form>
+</dialog>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="auth.js"></script>
+<script>
+/* Uses `client`, `$`, getRole, showMessage, clearMessage, friendlyError from auth.js */
+
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) =>
+    ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const money = (n) => "KES " + Number(n).toLocaleString("en-KE");
+const slugify = (t) => t.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+
+let categoryRows = [];
+let productRows = [];
+let editing = null;        // the product being edited, or null when adding
+let removedVariantIds = [];
+
+const dlg = $("product-dialog");
+
+function dlgMessage(text, type = "error") {
+    const box = $("dlg-message");
+    box.textContent = text;
+    box.className = "form-message " + type;
+    box.hidden = !text;
+}
+
+/* ---------- access check: admins only ---------- */
+async function guard() {
+    const timeout = new Promise((_, reject) => setTimeout(
+        () => reject(new Error("The login check timed out. Close any other open tabs of this site, then refresh.")), 8000));
+    const { data } = await Promise.race([client.auth.getSession(), timeout]);
+    if (!data.session) { window.location.href = "login.html"; return false; }
+    const role = await getRole(data.session.user.id);
+    if (role !== "admin") { window.location.href = "index.html"; return false; }
+    return true;
+}
+
+/* ---------- load + draw ---------- */
+async function load() {
+    const [c, p] = await Promise.all([
+        client.from("categories").select("*").order("sort_order"),
+        client.from("products").select("*, product_variants(*)").order("created_at", { ascending: false }),
+    ]);
+    if (c.error || p.error) {
+        showMessage(friendlyError(c.error || p.error));
+        return;
+    }
+    categoryRows = c.data;
+    productRows = p.data;
+    $("p-category").innerHTML = categoryRows.map((x) => `<option value="${x.id}">${esc(x.name)}</option>`).join("");
+    draw();
+}
+
+function totalStock(p) { return p.product_variants.reduce((n, v) => n + v.stock_qty, 0); }
+function isLow(p) { return p.product_variants.some((v) => v.stock_qty <= v.low_stock_threshold); }
+
+function draw() {
+    const q = $("admin-search").value.trim().toLowerCase();
+    const list = productRows.filter((p) => !q || `${p.name} ${p.brand || ""}`.toLowerCase().includes(q));
+
+    const lowCount = productRows.filter((p) => p.is_active && isLow(p)).length;
+    $("stats").innerHTML = `
+        <div class="stat"><b>${productRows.length}</b><span>Products</span></div>
+        <div class="stat"><b>${productRows.filter((p) => p.is_active).length}</b><span>Showing in shop</span></div>
+        <div class="stat"><b>${lowCount}</b><span>With low or zero stock</span></div>`;
+
+    if (!list.length) {
+        $("product-rows").innerHTML = '<tr><td colspan="7">No products yet. Click "Add product" to create one.</td></tr>';
+        return;
+    }
+
+    $("product-rows").innerHTML = list.map((p) => {
+        const cat = categoryRows.find((c) => c.id === p.category_id);
+        return `<tr>
+            <td><img src="${esc(p.image_url || "Logo.jpeg")}" alt=""></td>
+            <td><b>${esc(p.name)}</b><br><span class="hint">${esc(p.brand || "")}</span></td>
+            <td>${esc(cat ? cat.name : "None")}</td>
+            <td>${money(p.base_price)}</td>
+            <td>${totalStock(p)} ${isLow(p) ? '<span class="badge low">Low</span>' : ""}</td>
+            <td><span class="badge ${p.is_active ? "on" : "off"}">${p.is_active ? "Showing" : "Hidden"}</span></td>
+            <td class="actions">
+                <button class="btn secondary small" data-edit="${p.id}" type="button">Edit</button>
+                <button class="btn secondary small" data-toggle="${p.id}" type="button">${p.is_active ? "Hide" : "Show"}</button>
+            </td>
+        </tr>`;
+    }).join("");
+}
+
+$("admin-search").addEventListener("input", draw);
+
+$("product-rows").addEventListener("click", async (e) => {
+    const edit = e.target.closest("[data-edit]");
+    if (edit) return openForm(productRows.find((p) => String(p.id) === edit.dataset.edit));
+
+    const tog = e.target.closest("[data-toggle]");
+    if (tog) {
+        const p = productRows.find((x) => String(x.id) === tog.dataset.toggle);
+        clearMessage();
+        const { error } = await client.from("products").update({ is_active: !p.is_active }).eq("id", p.id);
+        if (error) return showMessage(friendlyError(error));
+        showMessage(`${p.name} is now ${p.is_active ? "hidden from" : "showing in"} the shop.`, "success");
+        await load();
+    }
+});
+
+/* ---------- add / edit form ---------- */
+function variantRowHtml(v = {}) {
+    return `<tr data-id="${v.id ?? ""}">
+        <td><input class="v-size" value="${esc(v.size ?? "")}" aria-label="Size" required></td>
+        <td><input class="v-color" value="${esc(v.color ?? "Standard")}" aria-label="Color" required></td>
+        <td><input class="v-stock" type="number" min="0" step="1" value="${v.stock_qty ?? 0}" aria-label="Stock" required></td>
+        <td><input class="v-price" type="number" min="0" step="50" value="${v.price_override ?? ""}" aria-label="Price override"></td>
+        <td><button type="button" class="btn danger small v-remove">Remove</button></td>
+    </tr>`;
+}
+
+function openForm(product) {
+    editing = product || null;
+    removedVariantIds = [];
+    dlgMessage("");
+    $("dlg-title").textContent = editing ? "Edit product" : "Add product";
+    $("p-name").value = editing?.name ?? "";
+    $("p-category").value = editing?.category_id ?? (categoryRows[0]?.id ?? "");
+    $("p-brand").value = editing?.brand ?? "";
+    $("p-price").value = editing?.base_price ?? "";
+    $("p-desc").value = editing?.description ?? "";
+    $("p-active").checked = editing ? editing.is_active : true;
+    $("p-image").value = "";
+
+    const prev = $("p-preview");
+    if (editing?.image_url) { prev.src = editing.image_url; prev.hidden = false; } else { prev.hidden = true; }
+
+    const vs = editing ? [...editing.product_variants] : [];
+    $("variant-rows").innerHTML = vs.length ? vs.map(variantRowHtml).join("") : variantRowHtml();
+    dlg.showModal();
+}
+
+$("add-product").addEventListener("click", () => openForm(null));
+$("cancel").addEventListener("click", () => dlg.close());
+$("add-variant").addEventListener("click", () => $("variant-rows").insertAdjacentHTML("beforeend", variantRowHtml()));
+
+$("variant-rows").addEventListener("click", (e) => {
+    if (!e.target.classList.contains("v-remove")) return;
+    const row = e.target.closest("tr");
+    if (row.dataset.id) removedVariantIds.push(Number(row.dataset.id));
+    row.remove();
+});
+
+$("p-image").addEventListener("change", (e) => {
+    const f = e.target.files[0];
+    const prev = $("p-preview");
+    if (f) { prev.src = URL.createObjectURL(f); prev.hidden = false; }
+});
+
+$("product-form").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    dlgMessage("");
+
+    const name = $("p-name").value.trim();
+    const price = Number($("p-price").value);
+    const rows = [...$("variant-rows").querySelectorAll("tr")].map((tr) => ({
+        id: tr.dataset.id ? Number(tr.dataset.id) : null,
+        size: tr.querySelector(".v-size").value.trim(),
+        color: tr.querySelector(".v-color").value.trim() || "Standard",
+        stock_qty: Number(tr.querySelector(".v-stock").value),
+        price_override: tr.querySelector(".v-price").value === "" ? null : Number(tr.querySelector(".v-price").value),
+    }));
+
+    if (!name) return dlgMessage("Enter a product name.");
+    if (!(price >= 0)) return dlgMessage("Enter a valid price.");
+    if (!rows.length) return dlgMessage("Add at least one size.");
+    if (rows.some((r) => !r.size)) return dlgMessage("Every row needs a size.");
+    if (rows.some((r) => !Number.isInteger(r.stock_qty) || r.stock_qty < 0)) return dlgMessage("Stock must be a whole number, 0 or more.");
+    const keys = rows.map((r) => (r.size + "|" + r.color).toLowerCase());
+    if (new Set(keys).size !== keys.length) return dlgMessage("Two rows have the same size and color.");
+
+    const file = $("p-image").files[0];
+    if (file && !file.type.startsWith("image/")) return dlgMessage("The photo must be an image.");
+    if (file && file.size > 3 * 1024 * 1024) return dlgMessage("The photo is larger than 3 MB. Choose a smaller one.");
+
+    const saveBtn = $("save");
+    saveBtn.disabled = true;
+    saveBtn.textContent = "Saving...";
+
+    try {
+        // 1. photo
+        let imageUrl = editing?.image_url ?? null;
+        if (file) {
+            const ext = (file.name.split(".").pop() || "jpg").toLowerCase().replace(/[^a-z0-9]/g, "");
+            const path = `${Date.now()}-${slugify(name) || "product"}.${ext}`;
+            const up = await client.storage.from("product-images").upload(path, file, { contentType: file.type });
+            if (up.error) throw up.error;
+            imageUrl = client.storage.from("product-images").getPublicUrl(path).data.publicUrl;
+        }
+
+        // 2. product row
+        const fields = {
+            name,
+            brand: $("p-brand").value.trim() || null,
+            description: $("p-desc").value.trim() || null,
+            category_id: Number($("p-category").value) || null,
+            base_price: price,
+            image_url: imageUrl,
+            is_active: $("p-active").checked,
+        };
+
+        let productId, slug;
+        if (editing) {
+            const r = await client.from("products").update(fields).eq("id", editing.id);
+            if (r.error) throw r.error;
+            productId = editing.id;
+            slug = editing.slug;
+        } else {
+            slug = slugify(name);
+            const r = await client.from("products").insert({ ...fields, slug }).select("id").single();
+            if (r.error) throw r.error;
+            productId = r.data.id;
+        }
+
+        // 3. variants
+        const skuFor = (r) => `${slug}-${r.size}-${r.color}`.toUpperCase().replace(/[^A-Z0-9]+/g, "-").replace(/-$/, "");
+
+        if (removedVariantIds.length) {
+            const d = await client.from("product_variants").delete().in("id", removedVariantIds);
+            if (d.error) throw d.error;
+        }
+        for (const r of rows.filter((x) => x.id)) {
+            const u = await client.from("product_variants").update({
+                size: r.size, color: r.color, stock_qty: r.stock_qty, price_override: r.price_override, sku: skuFor(r),
+            }).eq("id", r.id);
+            if (u.error) throw u.error;
+        }
+        const fresh = rows.filter((x) => !x.id).map((r) => ({
+            product_id: productId, size: r.size, color: r.color, stock_qty: r.stock_qty,
+            price_override: r.price_override, sku: skuFor(r),
+        }));
+        if (fresh.length) {
+            const i = await client.from("product_variants").insert(fresh);
+            if (i.error) throw i.error;
+        }
+
+        dlg.close();
+        showMessage(`${name} saved.`, "success");
+        await load();
+    } catch (err) {
+        if (err && err.code === "23505") dlgMessage("A product or size with the same name already exists. Change the name or size and try again.");
+        else dlgMessage(friendlyError(err));
+    } finally {
+        saveBtn.disabled = false;
+        saveBtn.textContent = "Save product";
+    }
+});
+
+$("logout").addEventListener("click", async () => {
+    await client.auth.signOut();
+    window.location.href = "login.html";
+});
+
+/* ---------- start ---------- */
+(async () => {
+    try {
+        if (!(await guard())) return;
+        $("gate").hidden = true;
+        $("app").hidden = false;
+        await load();
+    } catch (err) {
+        // Show the real reason on the page instead of staying on "Checking access..."
+        const gate = document.getElementById("gate");
+        gate.hidden = false;
+        gate.textContent = "Could not open the admin page: " + (err && err.message ? err.message : err);
+        console.error(err);
+    }
+})();
+</script>
+</body>
+</html>
