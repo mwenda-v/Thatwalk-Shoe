@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>That Walk & Shoe | Quality footwear delivered anywhere in Kenya</title>
+<meta name="description" content="Shop men's, ladies' and kids' shoes. Quality footwear delivered anywhere in Kenya.">
+
+<style>
+
+
+header {
+    background: #000;
+    color: white;
+    width: 100%;
+    position: relative;
+    z-index: 1000;
+}
+
+.navbar {
+    width: 100%;
+    min-height: 70px;
+    padding: 0 5%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.logo { display: flex; align-items: center; }
+.logo img { height: 50px; width: auto; object-fit: contain; }
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.nav-links a {
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 500;
+    transition: 0.3s ease;
+}
+.nav-links a:hover { color: #ff6600; }
+
+.nav-links .login-btn {
+    background: #ff6600;
+    color: white;
+    padding: 10px 18px;
+    border-radius: 5px;
+}
+.nav-links .login-btn:hover { background: #e65c00; color: white; }
+
+.cart-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: red;
+    text-decoration: none;
+    font-weight: bold;
+    position: relative;
+}
+.cart-btn img { height: 24px; width: 24px; object-fit: contain; }
+
+.cart-count {
+    background: gray;
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    border-radius: 50%;
+    padding: 3px 7px;
+    position: absolute;
+    top: -8px;
+    right: -12px;
+}
+
+/* HAMBURGER MENU */
+.menu-toggle { 
+    display: none; 
+    flex-direction: column; 
+    cursor: pointer; 
+    gap: 5px; 
+    background: none; 
+    border: none; 
+    padding: 4px; }
+.menu-toggle span { 
+    height: 3px; 
+    width: 28px; 
+    background: white; 
+    border-radius: 3px; 
+    transition: 0.3s; }
+
+/* MOBILE NAVIGATION */
+@media (max-width: 768px) {
+    .navbar { padding: 10px 5%; }
+    .menu-toggle { display: flex; }
+    .nav-links {
+        display: none;
+        position: absolute;
+        top: 70px;
+        right: 5%;
+        width: 220px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0;
+        background: #000;
+        padding: 15px;
+        border-radius: 8px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    }
+    .nav-links.active { display: flex; }
+    .nav-links li { width: 100%; padding: 12px 0; }
+    .nav-links a { display: block; width: 100%; }
+    .nav-links .login-btn { display: inline-block; width: auto; }
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body { background: #f5f5f5; }
+
+/* HERO SECTION */
+.hero {
+    height: 70vh;
+    background: url("banner1.png") center/cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: white;
+}
+.hero-content { background: rgba(0,0,0,0.6); padding: 30px; border-radius: 10px; }
+.hero h1 { font-size: 3rem; margin-bottom: 10px; }
+.hero p { font-size: 1.2rem; }
+
+/* NAV TOGGLE (ticker) SECTION */
+.nav-toggle { background: black; color: white; padding: 15px 5%; overflow: hidden; position: relative; }
+.nav-content { display: flex; justify-content: space-between; align-items: center; animation: slideText 15s linear infinite; }
+.nav-content p { font-size: 1.2rem; font-weight: bold; margin: 0; }
+.order-btn { background: #ff6600; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-weight: bold; }
+.order-btn:hover { background: #e65c00; }
+@keyframes slideText {
+  0% { transform: translateX(100%); }
+  100% { transform: translateX(-100%); }
+}
+@media (prefers-reduced-motion: reduce) { .nav-content { animation: none; } }
+
+/* =========================
+   SHOP: SEARCH + FILTERS
+========================= */
+.shop { padding: 50px 5%; }
+
+.category-title {
+    font-size: 2rem;
+    color: #ff6600;
+    margin-bottom: 25px;
+    border-left: 5px solid #ff6600;
+    padding-left: 15px;
+}
+
+.filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+    margin-bottom: 16px;
+}
+.filters input[type=search],
+.filters select {
+    padding: 11px 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background: white;
+    font-size: 15px;
+}
+.filters input[type=search] { flex: 1 1 240px; min-width: 0; }
+.filters label { font-size: 14px; color: #444; display: flex; align-items: center; gap: 6px; }
+
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+.chip {
+    padding: 8px 16px;
+    border: 1px solid #ccc;
+    border-radius: 999px;
+    background: white;
+    cursor: pointer;
+    font-size: 14px;
+}
+.chip[aria-pressed="true"] { background: #111; color: white; border-color: #111; }
+.chip:hover { border-color: #ff6600; }
+
+.result-count { font-size: 14px; color: #555; margin-bottom: 18px; }
+
+:focus-visible { outline: 2px solid #ff6600; outline-offset: 2px; }
+
+/* SHOE GRID */
+.shoe-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.shoe-card {
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    transition: 0.3s;
+    cursor: pointer;
+    position: relative;
+}
+.shoe-card:hover { transform: translateY(-5px); }
+.shoe-card img { width: 100%; height: 250px; object-fit: cover; display: block; }
+.shoe-info { padding: 15px; }
+.shoe-info h3 { margin-bottom: 6px; }
+.brand { font-size: 13px; color: #666; margin-bottom: 8px; }
+.price { color: #ff6600; font-size: 20px; font-weight: bold; }
+.sold-out {
+    position: absolute; top: 10px; left: 10px;
+    background: #111; color: white; font-size: 12px; font-weight: bold;
+    padding: 5px 10px; border-radius: 4px;
+}
+
+.buy-btn {
+    margin-top: 15px;
+    width: 100%;
+    padding: 10px;
+    border: none;
+    background: #ff6600;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+    font-weight: bold;
+}
+.buy-btn:hover { background: #e65c00; }
+.buy-btn[disabled] { background: #bbb; cursor: not-allowed; }
+
+.empty-state { grid-column: 1 / -1; text-align: center; padding: 40px 10px; color: #555; }
+.empty-state button { margin-top: 12px; width: auto; padding: 10px 20px; }
+
+/* =========================
+   PRODUCT DIALOG
+========================= */
+dialog {
+    border: none;
+    border-radius: 12px;
+    width: min(760px, 94vw);
+    max-height: 92vh;
+    padding: 0;
+    overflow: auto;
+}
+dialog::backdrop { background: rgba(0,0,0,0.6); }
+.modal-body { display: grid; grid-template-columns: 1fr 1fr; }
+.modal-body img { width: 100%; height: 100%; min-height: 280px; object-fit: cover; display: block; }
+.modal-info { padding: 24px; position: relative; }
+.modal-close {
+    position: absolute; top: 8px; right: 10px;
+    background: none; border: none; font-size: 28px; cursor: pointer; line-height: 1; color: #444;
+}
+.modal-info h2 { margin: 0 30px 4px 0; }
+.modal-desc { color: #444; margin: 10px 0 14px; font-size: 15px; line-height: 1.5; }
+.opt-label { font-size: 14px; font-weight: bold; margin: 14px 0 8px; }
+.opt-row { display: flex; flex-wrap: wrap; gap: 8px; }
+.opt {
+    min-width: 46px; padding: 9px 12px; border: 1px solid #ccc; border-radius: 6px;
+    background: white; cursor: pointer; font-size: 14px;
+}
+.opt[aria-pressed="true"] { background: #111; color: white; border-color: #111; }
+.opt[disabled] { color: #aaa; text-decoration: line-through; cursor: not-allowed; background: #f3f3f3; }
+.stock-note { font-size: 13px; margin-top: 10px; min-height: 18px; color: #a33; }
+.wa-btn {
+    display: block; text-align: center; margin-top: 16px; padding: 12px;
+    background: #1b8f4a; color: white; border-radius: 6px; text-decoration: none; font-weight: bold;
+}
+.wa-btn[aria-disabled="true"] { background: #bbb; pointer-events: none; }
+.hint { font-size: 12px; color: #666; margin-top: 8px; }
+
+@media (max-width: 640px) {
+    .modal-body { grid-template-columns: 1fr; }
+    .modal-body img { min-height: 220px; max-height: 260px; }
+}
+
+/* FOOTER */
+footer { background: black; color: white; text-align: center; padding: 20px; margin-top: 50px; }
+</style>
+</head>
+<body>
+
+<header>
+    <nav class="navbar" aria-label="Main">
+
+        <div class="logo">
+            <a href="index.html"><img src="Logo.jpeg" alt="That Walk & Shoe logo"></a>
+        </div>
+
+        <ul class="nav-links" id="nav-links">
+            <li>
+                <a href="Cart.html" class="cart-btn">
+                    <img src="Cart2.jfif" alt="">
+                    <span>Cart</span>
+                    <span class="cart-count">0</span>
+                </a>
+            </li>
+            <li><a href="about.html">About Us</a></li>
+            <li><a href="contact.html">Contact Us</a></li>
+            <li><a href="delivery.html">Delivery</a></li>
+            <li><a href="faq.html">FAQ</a></li>
+            <li id="admin-link" hidden><a href="admin.html">Admin</a></li>
+            <li><a href="login.html" class="login-btn">Login</a></li>
+        </ul>
+
+        <button class="menu-toggle" id="menu-toggle" aria-label="Open menu" aria-controls="nav-links" aria-expanded="false">
+            <span></span><span></span><span></span>
+        </button>
+
+    </nav>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+    <div class="hero-content">
+        <h1>THAT WALK & SHOE</h1>
+        <p>Quality Footwear Delivered Anywhere In Kenya</p>
+    </div>
+</section>
+
+<!-- TICKER -->
+<section class="nav-toggle">
+  <div class="nav-content">
+    <p>Own your walk with a good quality shoe. Delivery Country Wide</p>
+    <button class="order-btn" id="order-now">ORDER NOW</button>
+  </div>
+</section>
+
+<!-- SHOP -->
+<main class="shop" id="shop">
+    <h2 class="category-title">Shop all shoes</h2>
+
+    <div class="filters">
+        <input type="search" id="search" placeholder="Search shoes, e.g. Nike, heels" aria-label="Search shoes">
+        <label>Size
+            <select id="size-filter"><option value="all">All sizes</option></select>
+        </label>
+        <label>Sort by
+            <select id="sort">
+                <option value="newest">Newest</option>
+                <option value="price-asc">Price: low to high</option>
+                <option value="price-desc">Price: high to low</option>
+                <option value="name">Name A to Z</option>
+            </select>
+        </label>
+    </div>
+
+    <div class="chips" id="chips" role="group" aria-label="Category"></div>
+    <p class="result-count" id="result-count" aria-live="polite"></p>
+
+    <div class="shoe-grid" id="shoe-grid">
+        <p class="empty-state">Loading shoes...</p>
+    </div>
+</main>
+
+<!-- PRODUCT DIALOG -->
+<dialog id="product-modal" aria-labelledby="modal-title">
+    <div class="modal-body" id="modal-body"></div>
+</dialog>
+
+<footer>
+<p>© 2026 That Walk & Shoe. All Rights Reserved.</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="auth.js"></script>
+<script>
+/* ---------- settings you must edit ---------- */
+// Your WhatsApp number in international format, digits only (e.g. 254712345678)
+const WHATSAPP_NUMBER = "254700000000";
+
+/* ---------- mobile menu ---------- */
+const menuToggle = document.getElementById("menu-toggle");
+const navLinks = document.querySelector(".nav-links");
+menuToggle.addEventListener("click", () => {
+    const open = navLinks.classList.toggle("active");
+    menuToggle.setAttribute("aria-expanded", String(open));
+});
+document.getElementById("order-now").addEventListener("click", () => {
+    document.getElementById("shop").scrollIntoView({ behavior: "smooth" });
+});
+
+/* ---------- helpers ---------- */
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) =>
+    ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const money = (n) => "KES " + Number(n).toLocaleString("en-KE");
+const variantPrice = (p, v) => (v.price_override ?? p.base_price);
+const bySize = (a, b) => {
+    const x = parseFloat(a.size), y = parseFloat(b.size);
+    return isNaN(x) || isNaN(y) ? String(a.size).localeCompare(String(b.size)) : x - y;
+};
+
+/* ---------- state ---------- */
+let allProducts = [];
+let categoryList = [];
+const filters = { q: "", cat: "all", size: "all", sort: "newest" };
+
+const gridEl = document.getElementById("shoe-grid");
+const countEl = document.getElementById("result-count");
+
+/* ---------- load from Supabase ---------- */
+async function loadShop() {
+    const [catRes, prodRes] = await Promise.all([
+        client.from("categories").select("name,slug").order("sort_order"),
+        client.from("products")
+            .select("id,name,slug,description,brand,base_price,image_url,created_at,categories(name,slug),product_variants(id,size,color,price_override,stock_qty)")
+            .eq("is_active", true),
+    ]);
+
+    if (catRes.error || prodRes.error) {
+        gridEl.innerHTML = '<p class="empty-state">Could not load shoes. Check your internet and refresh.</p>';
+        console.error(catRes.error || prodRes.error);
+        return;
+    }
+
+    categoryList = catRes.data;
+    allProducts = prodRes.data.map((p) => {
+        const prices = p.product_variants.map((v) => variantPrice(p, v));
+        return {
+            ...p,
+            minPrice: prices.length ? Math.min(...prices) : p.base_price,
+            hasRange: prices.length > 0 && Math.min(...prices) !== Math.max(...prices),
+            inStock: p.product_variants.some((v) => v.stock_qty > 0),
+        };
+    });
+
+    buildChips();
+    buildSizeOptions();
+    render();
+}
+
+function buildChips() {
+    const chips = document.getElementById("chips");
+    const items = [{ name: "All", slug: "all" }, ...categoryList];
+    chips.innerHTML = items.map((c) =>
+        `<button type="button" class="chip" data-cat="${esc(c.slug)}" aria-pressed="${c.slug === filters.cat}">${esc(c.name)}</button>`
+    ).join("");
+}
+
+function buildSizeOptions() {
+    const sizes = new Set();
+    allProducts.forEach((p) => p.product_variants.forEach((v) => { if (v.stock_qty > 0) sizes.add(v.size); }));
+    const sorted = [...sizes].sort((a, b) => bySize({ size: a }, { size: b }));
+    document.getElementById("size-filter").innerHTML =
+        '<option value="all">All sizes</option>' + sorted.map((s) => `<option value="${esc(s)}">${esc(s)}</option>`).join("");
+}
+
+/* ---------- filter + sort + draw ---------- */
+function matches(p) {
+    const q = filters.q.trim().toLowerCase();
+    if (q) {
+        const hay = `${p.name} ${p.brand || ""} ${p.categories?.name || ""}`.toLowerCase();
+        if (!hay.includes(q)) return false;
+    }
+    if (filters.cat !== "all" && p.categories?.slug !== filters.cat) return false;
+    if (filters.size !== "all" && !p.product_variants.some((v) => v.size === filters.size && v.stock_qty > 0)) return false;
+    return true;
+}
+
+function sortProducts(list) {
+    const s = filters.sort;
+    return [...list].sort((a, b) => {
+        if (s === "price-asc") return a.minPrice - b.minPrice;
+        if (s === "price-desc") return b.minPrice - a.minPrice;
+        if (s === "name") return a.name.localeCompare(b.name);
+        return new Date(b.created_at) - new Date(a.created_at);
+    });
+}
+
+function render() {
+    const list = sortProducts(allProducts.filter(matches));
+    countEl.textContent = list.length === 1 ? "1 shoe" : `${list.length} shoes`;
+
+    if (!list.length) {
+        gridEl.innerHTML = `<div class="empty-state"><p>No shoes match your search.</p>
+            <button type="button" class="buy-btn" id="clear-filters">Clear filters</button></div>`;
+        return;
+    }
+
+    gridEl.innerHTML = list.map((p) => `
+        <article class="shoe-card" data-id="${p.id}" tabindex="0" role="button" aria-label="View ${esc(p.name)}">
+            ${p.inStock ? "" : '<span class="sold-out">Sold out</span>'}
+            <img src="${esc(p.image_url || "Logo.jpeg")}" alt="${esc(p.name)}" loading="lazy">
+            <div class="shoe-info">
+                <h3>${esc(p.name)}</h3>
+                ${p.brand ? `<p class="brand">${esc(p.brand)}</p>` : ""}
+                <p class="price">${p.hasRange ? "From " : ""}${money(p.minPrice)}</p>
+                <button type="button" class="buy-btn" ${p.inStock ? "" : "disabled"}>${p.inStock ? "Choose size" : "Sold out"}</button>
+            </div>
+        </article>`).join("");
+}
+
+/* ---------- search / filter events ---------- */
+let searchTimer;
+document.getElementById("search").addEventListener("input", (e) => {
+    clearTimeout(searchTimer);
+    searchTimer = setTimeout(() => { filters.q = e.target.value; render(); }, 200);
+});
+document.getElementById("size-filter").addEventListener("change", (e) => { filters.size = e.target.value; render(); });
+document.getElementById("sort").addEventListener("change", (e) => { filters.sort = e.target.value; render(); });
+document.getElementById("chips").addEventListener("click", (e) => {
+    const chip = e.target.closest(".chip");
+    if (!chip) return;
+    filters.cat = chip.dataset.cat;
+    buildChips();
+    render();
+});
+gridEl.addEventListener("click", (e) => {
+    if (e.target.id === "clear-filters") {
+        filters.q = ""; filters.cat = "all"; filters.size = "all";
+        document.getElementById("search").value = "";
+        document.getElementById("size-filter").value = "all";
+        buildChips(); render();
+        return;
+    }
+    const card = e.target.closest(".shoe-card");
+    if (card) openModal(card.dataset.id);
+});
+gridEl.addEventListener("keydown", (e) => {
+    if (e.key !== "Enter" && e.key !== " ") return;
+    const card = e.target.closest(".shoe-card");
+    if (card) { e.preventDefault(); openModal(card.dataset.id); }
+});
+
+/* ---------- product dialog ---------- */
+const modal = document.getElementById("product-modal");
+let current = null, selColor = null, selVariantId = null;
+
+function openModal(id) {
+    current = allProducts.find((p) => String(p.id) === String(id));
+    if (!current) return;
+    const inStock = current.product_variants.find((v) => v.stock_qty > 0);
+    selColor = (inStock || current.product_variants[0] || {}).color || null;
+    selVariantId = null;
+    renderModal();
+    modal.showModal();
+}
+
+function renderModal() {
+    const p = current;
+    const colors = [...new Set(p.product_variants.map((v) => v.color))];
+    const variants = p.product_variants.filter((v) => v.color === selColor).sort(bySize);
+    const chosen = variants.find((v) => v.id === selVariantId) || null;
+    const price = chosen ? variantPrice(p, chosen) : p.minPrice;
+
+    let note = "";
+    if (chosen) note = chosen.stock_qty <= 3 ? `Only ${chosen.stock_qty} left in this size` : "";
+
+    const colorBlock = colors.length > 1 ? `
+        <p class="opt-label">Color</p>
+        <div class="opt-row">${colors.map((c) =>
+            `<button type="button" class="opt" data-color="${esc(c)}" aria-pressed="${c === selColor}">${esc(c)}</button>`).join("")}</div>` : "";
+
+    let waText = `Hi That Walk & Shoe, I'd like to order: ${p.name}`;
+    if (chosen) waText += `, size ${chosen.size}${colors.length > 1 ? ", " + chosen.color : ""}, ${money(price)}.`;
+    const waHref = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(waText)}`;
+
+    document.getElementById("modal-body").innerHTML = `
+        <img src="${esc(p.image_url || "Logo.jpeg")}" alt="${esc(p.name)}">
+        <div class="modal-info">
+            <button type="button" class="modal-close" aria-label="Close">&times;</button>
+            <h2 id="modal-title">${esc(p.name)}</h2>
+            ${p.brand ? `<p class="brand">${esc(p.brand)}</p>` : ""}
+            <p class="price">${p.hasRange && !chosen ? "From " : ""}${money(price)}</p>
+            ${p.description ? `<p class="modal-desc">${esc(p.description)}</p>` : ""}
+            ${colorBlock}
+            <p class="opt-label">Size</p>
+            <div class="opt-row">${variants.map((v) =>
+                `<button type="button" class="opt" data-variant="${v.id}" aria-pressed="${v.id === selVariantId}" ${v.stock_qty > 0 ? "" : "disabled"}>${esc(v.size)}</button>`).join("")}</div>
+            <p class="stock-note">${note}</p>
+            <a class="wa-btn" href="${waHref}" target="_blank" rel="noopener" aria-disabled="${chosen ? "false" : "true"}">Order on WhatsApp</a>
+            <p class="hint">${chosen ? "We will confirm delivery and payment on WhatsApp." : "Pick a size to continue."}</p>
+        </div>`;
+}
+
+modal.addEventListener("click", (e) => {
+    if (e.target === modal || e.target.closest(".modal-close")) { modal.close(); return; }
+    const colorBtn = e.target.closest("[data-color]");
+    if (colorBtn) { selColor = colorBtn.dataset.color; selVariantId = null; renderModal(); return; }
+    const sizeBtn = e.target.closest("[data-variant]");
+    if (sizeBtn && !sizeBtn.disabled) { selVariantId = Number(sizeBtn.dataset.variant); renderModal(); }
+});
+
+/* ---------- show the Admin link to admins only ---------- */
+(async () => {
+    const { data } = await client.auth.getSession();
+    if (data.session && (await getRole(data.session.user.id)) === "admin") {
+        document.getElementById("admin-link").hidden = false;
+    }
+})();
+
+loadShop();
+</script>
+
+</body>
+</html>
